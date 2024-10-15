@@ -10,39 +10,29 @@ on:
 
 jobs:
   build_and_deploy:
-    runs-on: ubuntu-latest
+    # This uses the self-hosted runner on Raspberry Pi
+    runs-on: self-hosted
 
     steps:
-      # Step 1: Checkout code from the repository
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Step 2: Set up Node.js 20 environment
-      - name: Set up Node.js
+      - name: Set up Node.js 20
         uses: actions/setup-node@v3
         with:
           node-version: "20"
 
-      # Step 3: Install dependencies
       - name: Install dependencies
         run: npm install
 
-      # Step 4: Build the React app
       - name: Build the app
         run: npm run build
 
-      # Step 5: Deploy the app to Raspberry Pi using SSH
-      - name: Deploy to Raspberry Pi
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.RASPBERRY_PI_HOST }}
-          username: ${{ secrets.RASPBERRY_PI_USER }}
-          key: ${{ secrets.RASPBERRY_PI_SSH_KEY }}
-          port: 22
-          script: |
-            cd /var/www/my-react-app || git clone https://github.com/<your-username>/<your-repo>.git /var/www/my-react-app
-            cd /var/www/my-react-app
-            git pull
-            npm install
-            npm run build
-            pm2 restart all || pm2 start npm --name "my-react-app" -- start
+      - name: Deploy the app to Raspberry Pi
+        run: |
+          cd /var/www/my-react-app || git clone https://github.com/<your-username>/<your-repo>.git /var/www/my-react-app
+          cd /var/www/my-react-app
+          git pull
+          npm install
+          npm run build
+          pm2 restart all || pm2 start npm --name "my-react-app" -- start
