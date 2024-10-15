@@ -7,7 +7,7 @@ on:
 
 jobs:
   test-runner:
-    runs-on: [self-hosted, raspberrypi]
+    runs-on: self-hosted
     
     steps:
       - name: Checkout code
