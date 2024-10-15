@@ -1,17 +1,52 @@
-name: Test Runner on Raspberry Pi
+name: CI/CD Pipeline for React App on Raspberry Pi
 
 on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  test-runner:
+  build_and_deploy:
+    # Use the specific runner named 'raspberrypi'
     runs-on: self-hosted
-    
+
     steps:
+      # Step 1: Checkout the code from the GitHub repository
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Run echo command
-        run: echo "Hello from Raspberry Pi Runner"
+      # Step 2: Set up Node.js 20 LTS on the Raspberry Pi
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+
+      # Step 3: Install project dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Step 4: Build the React app using Vite
+      - name: Build the app
+        run: npm run build
+
+      # Step 5: Deploy the app to Raspberry Pi
+      - name: Deploy the app to Raspberry Pi
+        run: |
+          # Check if the directory exists, clone if it doesn't
+          if [ ! -d "/var/www/my-react-app" ]; then
+            git clone https://github.com/CrazySoda/Tanvir-s-Test.git /var/www/my-react-app
+          fi
+          
+          # Go to the project directory and pull the latest changes
+          cd /var/www/my-react-app
+          git pull
+
+          # Install dependencies and build the app
+          npm install
+          npm run build
+
+          # Restart the app using PM2 (or start if it hasn't been started before)
+          pm2 restart all || pm2 start npm --name "my-react-app" -- start
