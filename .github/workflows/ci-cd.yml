@@ -11,7 +11,7 @@ on:
 jobs:
   build_and_deploy:
     # Use the specific runner hosted on your Raspberry Pi
-    runs-on: [self-hosted, raspberrypi]  # Use the label of your Raspberry Pi runner
+    runs-on: self-hosted  # Use the label of your Raspberry Pi runner
 
     steps:
       # Step 1: Checkout the code from the GitHub repository
