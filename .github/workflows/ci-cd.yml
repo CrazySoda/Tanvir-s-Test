@@ -37,11 +37,11 @@ jobs:
         run: |
           # Check if the directory exists, clone if it doesn't
           if [ ! -d "/var/www/my-react-app" ]; then
-            git clone https://github.com/CrazySoda/Tanvir-s-Test.git /var/www/my-react-app
+            git clone https://github.com/CrazySoda/Tanvir-s-Test.git
           fi
           
           # Go to the project directory and pull the latest changes
-          cd /var/www/my-react-app
+          cd /Tanvir-s-Test
           git pull
 
           # Install dependencies and build the app
