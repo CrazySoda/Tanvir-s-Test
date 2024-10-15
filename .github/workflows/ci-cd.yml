@@ -10,7 +10,7 @@ on:
 
 jobs:
   build_and_deploy:
-    runs-on: self-hosted
+    runs-on: [self-hosted, raspberrypi]
 
     steps:
       - name: Checkout code
@@ -45,5 +45,14 @@ jobs:
           npm install
           npm run build
 
-          # Restart the app using PM2
-          pm2 restart my-react-app || pm2 start npm --name "my-react-app" -- start
+          # Stop the existing PM2 process if running
+          pm2 stop my-react-app || true
+          
+          # Delete the old process in case it exists
+          pm2 delete my-react-app || true
+
+          # Start the app using PM2
+          pm2 start npm --name "my-react-app" -- start
+
+          # Save the PM2 process list to auto-start on reboot
+          pm2 save
