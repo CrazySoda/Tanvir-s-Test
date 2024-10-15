@@ -10,39 +10,34 @@ on:
 
 jobs:
   build_and_deploy:
-    # Use the specific runner hosted on your Raspberry Pi
-    runs-on: self-hosted  # Use the label of your Raspberry Pi runner
+    runs-on: self-hosted
 
     steps:
-      # Step 1: Checkout the code from the GitHub repository
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Step 2: Set up Node.js 20 LTS on the Raspberry Pi
       - name: Set up Node.js 20
         uses: actions/setup-node@v3
         with:
           node-version: "20"
 
-      # Step 3: Install project dependencies
       - name: Install dependencies
         run: npm install
 
-      # Step 4: Build the React app using Vite
       - name: Build the app
         run: npm run build
 
-      # Step 5: Deploy the app to Raspberry Pi
       - name: Deploy the app to Raspberry Pi
         run: |
-          # Ensure the deployment directory exists
-          if [ ! -d "/var/www/my-react-app" ]; then
+          # Ensure the deployment directory exists and is a valid git repo
+          if [ ! -d "/var/www/my-react-app/.git" ]; then
+            sudo rm -rf /var/www/my-react-app  # Remove any existing non-git folder
             sudo mkdir -p /var/www/my-react-app
             sudo chown -R $USER:$USER /var/www/my-react-app
             git clone https://github.com/CrazySoda/Tanvir-s-Test.git /var/www/my-react-app
           fi
           
-          # Go to the project directory and pull the latest changes
+          # Navigate to the project directory and pull the latest changes
           cd /var/www/my-react-app
           git pull
 
@@ -50,5 +45,5 @@ jobs:
           npm install
           npm run build
 
-          # Restart the app using PM2 (or start if it hasn't been started before)
+          # Restart the app using PM2
           pm2 restart my-react-app || pm2 start npm --name "my-react-app" -- start
