@@ -10,8 +10,8 @@ on:
 
 jobs:
   build_and_deploy:
-    # Use the specific runner named 'raspberrypi'
-    runs-on: self-hosted
+    # Use the specific runner hosted on your Raspberry Pi
+    runs-on: [self-hosted, raspberrypi]  # Use the label of your Raspberry Pi runner
 
     steps:
       # Step 1: Checkout the code from the GitHub repository
@@ -35,13 +35,15 @@ jobs:
       # Step 5: Deploy the app to Raspberry Pi
       - name: Deploy the app to Raspberry Pi
         run: |
-          # Check if the directory exists, clone if it doesn't
+          # Ensure the deployment directory exists
           if [ ! -d "/var/www/my-react-app" ]; then
-            git clone https://github.com/CrazySoda/Tanvir-s-Test.git
+            sudo mkdir -p /var/www/my-react-app
+            sudo chown -R $USER:$USER /var/www/my-react-app
+            git clone https://github.com/CrazySoda/Tanvir-s-Test.git /var/www/my-react-app
           fi
           
           # Go to the project directory and pull the latest changes
-          cd /Tanvir-s-Test
+          cd /var/www/my-react-app
           git pull
 
           # Install dependencies and build the app
@@ -49,4 +51,4 @@ jobs:
           npm run build
 
           # Restart the app using PM2 (or start if it hasn't been started before)
-          pm2 restart all || pm2 start npm --name "my-react-app" -- start
+          pm2 restart my-react-app || pm2 start npm --name "my-react-app" -- start
