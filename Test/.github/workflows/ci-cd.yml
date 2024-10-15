@@ -10,8 +10,8 @@ on:
 
 jobs:
   build_and_deploy:
-    # This uses the self-hosted runner on Raspberry Pi
-    runs-on: self-hosted  # Specifies that it will run on your self-hosted Raspberry Pi runner
+    # Use the specific runner named 'raspberrypi'
+    runs-on: [self-hosted, raspberrypi]
 
     steps:
       # Step 1: Checkout the code from the GitHub repository
@@ -32,7 +32,7 @@ jobs:
       - name: Build the app
         run: npm run build
 
-      # Step 5: Deploy the app to Raspberry Pi (this step clones or updates the repo, installs dependencies, builds, and restarts the app)
+      # Step 5: Deploy the app to Raspberry Pi
       - name: Deploy the app to Raspberry Pi
         run: |
           # Check if the directory exists, clone if it doesn't
