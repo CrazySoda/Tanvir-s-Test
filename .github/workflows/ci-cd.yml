@@ -50,3 +50,6 @@ jobs:
 
           # Restart the app using PM2 (or start if it hasn't been started before)
           pm2 restart all || pm2 start npm --name "my-react-app" -- start
+
+
+          
