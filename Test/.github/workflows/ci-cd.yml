@@ -30,7 +30,7 @@ jobs:
 
       - name: Deploy the app to Raspberry Pi
         run: |
-          cd /var/www/my-react-app || git clone https://github.com/<your-username>/<your-repo>.git /var/www/my-react-app
+          cd /var/www/my-react-app || git clone https://github.com/CrazySoda/Tanvir-s-Test.git /var/www/my-react-app
           cd /var/www/my-react-app
           git pull
           npm install
